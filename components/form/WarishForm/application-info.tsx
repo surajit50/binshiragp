@@ -467,8 +467,7 @@ export const ApplicationInfo: React.FC<ApplicationInfoProps> = ({ form }) => {
                   <SelectValue placeholder="Enter Post Office / ডাকঘরের নাম লিখুন" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Trimohini">Trimohini</SelectItem>
-                  <SelectItem value="fatepur">Fatepur</SelectItem>
+                  <SelectItem value="Teor">Teor</SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>

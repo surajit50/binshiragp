@@ -637,33 +637,33 @@ export const relationshipOptions = [
 ];
 
 export const villagenameOption = [
-  { value: "Dabra", label: "Dabra" },
-  { value: "Iswarpara", label: "Iswarpara" },
-  { value: "Bhimpur", label: "Bhimpur" },
-
-  { value: "Srirampur", label: "Srirampur" },
-  { value: "Lalpur", label: "Lalpur" },
-
-  { value: "Uttar Jamalpur", label: "Uttar Jamalpur" },
-
-  { value: "Srikrishnapur", label: "Srikrishnapur" },
-  { value: "Purbba Gobindapur", label: "Purbba Gobindapur" },
-  { value: "Purba Kalikapur", label: "Purba Kalikapur" },
-  { value: "Dhalpara", label: "Dhalpara" },
-  { value: "Purbba Thakurpur", label: "Purbba Thakurpur" },
-  { value: "Kismat Dapt", label: "Kismat Dapt" },
-  { value: "Chakdapat", label: "Chakdapat" },
-  { value: "Chapahat", label: "Chapahat" },
-  { value: "Chak Mohan", label: "Chak Mohan" },
-  { value: "Basanta", label: "Basanta" },
-  { value: "Muraripur", label: "Muraripur" },
-  { value: "Mulahat", label: "Mulahat" },
-  { value: "Mahishnota", label: "Mahishnota" },
-  { value: "Jantipur", label: "Jantipur" },
-  { value: "Purbba Jagannathpur", label: "Purbba Jagannathpur" },
-  { value: "Laskarpur", label: "Laskarpur" },
-  { value: "Sarenbari", label: "Sarenbari" },
+  { value: "Nawapara", label: "Nawapara" },
+  { value: "Chak Balaram", label: "Chak Balaram" },
+  { value: "Purbba Krishnapur", label: "Purbba Krishnapur" },
+  { value: "Kamarghat", label: "Kamarghat" },
+  { value: "Jagadishpur", label: "Jagadishpur" },
+  { value: "Bramakhanda", label: "Bramakhanda" },
+  { value: "Rupbati", label: "Rupbati" },
+  { value: "Jotghatak", label: "Jotghatak" },
+  { value: "Kunja Dungi", label: "Kunja Dungi" },
+  { value: "Ferusha", label: "Ferusha" },
+  { value: "Baddungi", label: "Baddungi" },
+  { value: "Chaksubid", label: "Chaksubid" },
+  { value: "Tior", label: "Tior" },
+  { value: "Jot Tior", label: "Jot Tior" },
+  { value: "Sahapur", label: "Sahapur" },
+  { value: "Ismailpur", label: "Ismailpur" },
+  { value: "Syampur", label: "Syampur" },
+  { value: "Matais", label: "Matais" },
+  { value: "Binsira", label: "Binsira" },
+  { value: "Jantigari", label: "Jantigari" },
+  { value: "Salash", label: "Salash" },
+  { value: "Makhatair", label: "Makhatair" },
+  { value: "Purbba Mustafapur", label: "Purbba Mustafapur" },
+  { value: "Ponorahar (Powrahar)", label: "Ponorahar (Powrahar)" },
+  { value: "Fajullapur", label: "Fajullapur" }
 ];
+
 
 {
   /*
