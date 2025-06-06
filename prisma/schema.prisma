@@ -1,0 +1,247 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  user
+  admin
+  staff
+}
+
+enum UserStatus {
+  active
+  inactive
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(user)
+  accounts      Account[]
+  sessions      Session[]
+
+  isTwoFactorEnabled    Boolean                @default(false)
+  twoFactorConfirmation TwoFactorConfirmation?
+  imageKey              String?
+
+  userStatus        UserStatus          @default(active)
+  WarishApplication WarishApplication[]
+  WarishDocument    WarishDocument[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  User User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorConfirmation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  User   User   @relation(fields: [userId], references: [id])
+
+  @@unique([userId])
+}
+
+model WarishApplication {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  reportingDate         DateTime
+  acknowlegment         String   @unique
+  applicantName         String
+  applicantMobileNumber String
+  relationwithdeceased  String
+  nameOfDeceased        String
+  dateOfDeath           DateTime
+
+  gender                  Gender
+  maritialStatus          MaritialStatus
+  fatherName              String
+  spouseName              String?
+  villageName             String
+  postOffice              String
+  warishDetails           WarishDetail[]
+  assingstaffId           String?                 @db.ObjectId
+  fieldreportRemark       String?
+  adminNoteRemark         String?
+  warishRefNo             String?
+  warishRefDate           DateTime?
+  approvalYear            String?
+  renewdate               DateTime?
+  warishApplicationStatus WarishApplicationStatus @default(submitted)
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  User                    User?                   @relation(fields: [userId], references: [id])
+  userId                  String?                 @db.ObjectId
+  warishdocumentverified  Boolean                 @default(false)
+  WarishDocument          WarishDocument[]
+
+  @@index([applicantName, nameOfDeceased])
+}
+
+model WarishDetail {
+  id                  String             @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  gender              Gender
+  relation            FamilyRelationship
+  livingStatus        LivingStatus
+  maritialStatus      MaritialStatus
+  hasbandName         String?
+  children            WarishDetail[]     @relation("ParentChild")
+  parent              WarishDetail?      @relation("ParentChild", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentId            String?            @db.ObjectId
+  warishApplication   WarishApplication  @relation(fields: [warishApplicationId], references: [id], onDelete: Cascade)
+  warishApplicationId String             @db.ObjectId
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([name, warishApplicationId])
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+enum MaritialStatus {
+  married
+  unmarried
+  divorced
+  widowed
+}
+
+enum LivingStatus {
+  alive
+  dead
+}
+
+enum WarishApplicationStatus {
+  submitted
+  pending
+  process
+  approved
+  rejected
+  cancelled
+  renewed
+}
+
+enum FamilyRelationship {
+  Son
+  Daughter
+  Father
+  Mother
+  Brother
+  Wife
+  Husband
+  Sister
+  Grandfather
+  Grandmother
+  Grandson
+  Granddaughter
+  Uncle
+  Aunt
+  Nephew
+  Niece
+  Cousin
+  Stepfather
+  Stepmother
+  Stepson
+  Stepdaughter
+  Stepbrother
+  Stepsister
+  HalfBrother
+  HalfSister
+  FatherInLaw
+  MotherInLaw
+  SonInLaw
+  DaughterInLaw
+  GranddaughterInLaw
+  BrotherInLaw
+  SisterInLaw
+  Greatgrandson
+  Greatgranddaughter
+  GreatgranddaughterInLaw
+  GreatNephew
+  GreatNiece
+}
+
+model WarishDocument {
+  id                 String            @id @default(auto()) @map("_id") @db.ObjectId
+  warishId           String            @db.ObjectId
+  documentType       String
+  cloudinaryUrl      String
+  cloudinaryPublicId String
+  verified           Boolean           @default(false)
+  remarks            String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  warish             WarishApplication @relation(fields: [warishId], references: [id])
+  User               User?             @relation(fields: [userId], references: [id])
+  userId             String?           @db.ObjectId
+}
