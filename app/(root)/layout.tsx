@@ -14,14 +14,14 @@ export default function HomeLayout({ children }: Props) {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header Section */}
-      <Header />
+      {/* <Header /> */}
       <div className="flex flex-1">
         {/* Sidebar */}
 
 
         {/* Main Content Section */}
         <main className="flex-grow p-6 overflow-auto">
-          <AdUnit slot="8324866123" format="auto" responsive={true} style={{ minHeight: "300px" }} />
+          {/* <AdUnit slot="8324866123" format="auto" responsive={true} style={{ minHeight: "300px" }} /> */}
           <div className="max-w-7xl mx-auto">
             {children}
           </div>
@@ -30,8 +30,8 @@ export default function HomeLayout({ children }: Props) {
 
       </div>
 
-      {/* Footer Section */}
-      <Footer />
+      {/* Footer Section
+      <Footer /> */}
     </div>
   );
 }
