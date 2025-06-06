@@ -2,7 +2,7 @@ import type React from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import type { WarishApplicationStatus } from "@prisma/client";
-
+import { format } from "date-fns";
 import {
   Card,
   CardContent,
@@ -16,15 +16,24 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  ChevronRight,
   FileText,
   User,
   Calendar,
   Phone,
   MapPin,
   Users,
+  Home,
+  Printer,
   ArrowLeft,
+  FileCheck,
   Clock,
 } from "lucide-react";
 import Link from "next/link";
@@ -37,7 +46,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ShowWarishDetails } from "@/components/ShowWarishDetails";
 import { VerifyAllButton } from "@/components/verify-all-button";
-import { formatDate } from "@/utils/utils";
+
 
 const Page = async ({ params }: { params: { id: string } }) => {
   const application = await db.warishApplication.findUnique({
@@ -56,9 +65,9 @@ const Page = async ({ params }: { params: { id: string } }) => {
   const getStatusVariant = (status: WarishApplicationStatus) => {
     switch (status) {
       case "pending":
-        return "secondary";
+        return "warning";
       case "approved":
-        return "default";
+        return "success";
       case "rejected":
         return "destructive";
       default:
@@ -97,18 +106,20 @@ const Page = async ({ params }: { params: { id: string } }) => {
               <span className="text-muted-foreground">•</span>
               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Clock className="h-3.5 w-3.5" />
-                <span>{formatDate(application.dateOfDeath)}</span>
+                <span>
+                  {format(new Date(application.dateOfDeath), "dd MMM yyyy")}
+                </span>
               </div>
             </div>
           </div>
         </div>
         <Badge
           variant={getStatusVariant(
-            application.warishApplicationStatus || "secondary"
+            application.warishApplicationStatus || "pending"
           )}
           className="text-sm px-3 py-1"
         >
-          {application.warishApplicationStatus || "secondary"}
+          {application.warishApplicationStatus || "pending"}
         </Badge>
       </div>
 
@@ -202,7 +213,10 @@ const Page = async ({ params }: { params: { id: string } }) => {
                       <Calendar className="h-4 w-4 text-muted-foreground" />
                     }
                     label="Date of Death"
-                    value={formatDate(application.dateOfDeath)}
+                    value={format(
+                      new Date(application.dateOfDeath),
+                      "dd MMM yyyy"
+                    )}
                   />
                   <InfoItem
                     icon={<MapPin className="h-4 w-4 text-muted-foreground" />}

@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { getUserEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/token";
 import { sendVerificationEmail } from "@/lib/mail";
+import { emailServiceStatus } from "@/lib/emailservide";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validateField = RegisterSchema.safeParse(values);
@@ -23,6 +24,15 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
     if (existingUser) {
       return { error: "Email is already in use!" };
+    }
+
+    const status = await emailServiceStatus();
+
+    if (!status) {
+      return {
+        error:
+          "Registration is currently disabled. Please try again later or contact support.",
+      };
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

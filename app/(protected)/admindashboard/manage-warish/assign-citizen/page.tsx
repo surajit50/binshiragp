@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-
+import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -20,9 +20,8 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FormSubmitButton from "@/components/FormSubmitButton";
 import { revalidatePath } from "next/cache";
-import { Search, Filter} from "lucide-react";
+import { Search, Filter, Download } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { formatDate } from "@/utils/utils";
 
 export default async function WarishApplicationTable() {
   const [pending, assigned] = await Promise.all([
@@ -53,6 +52,7 @@ role: "staff",
     select: { id: true, name: true },
   });
 
+  const staffIds = assigned.map(app => app.assingstaffId).filter(Boolean) as string[];
   const staffMembers = await db.user.findMany({
     where: { role: "staff" },
     select: { id: true, name: true },
@@ -143,7 +143,7 @@ role: "staff",
                     </TableCell>
                     <TableCell>{application.User?.name}</TableCell>
                     <TableCell>
-                      {formatDate(application.createdAt)}
+                      {format(application.createdAt, "dd MMM yyyy")}
                     </TableCell>
                     <TableCell>
                       <form action={assignStaff} className="flex gap-2">
@@ -216,7 +216,7 @@ role: "staff",
                         {staff?.name || "Unassigned"}
                       </TableCell>
                       <TableCell>
-                        {formatDate(application.updatedAt)}
+                        {format(application.updatedAt, "dd MMM yyyy")}
                       </TableCell>
                       <TableCell>
                         <Badge className="bg-blue-100 text-blue-800">

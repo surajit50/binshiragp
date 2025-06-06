@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { ChevronDown, ChevronUp, Menu, User } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,9 @@ import {
   superAdminMenuItems,
   type MenuItemProps,
 } from "@/constants/protected-menu";
-
+import { RootState } from "@/redux/store";
 import { toggleMenu } from "@/redux/slices/menuSlice";
+import ImprovedFooter from "../improved-footer";
 
 // Types
 type Role = "user" | "admin" | "staff" | "superadmin";
@@ -140,11 +141,14 @@ function SidebarContent({ role }: { role: Role }) {
           ))}
         </nav>
       </ScrollArea>
+
+      <ImprovedFooter />
     </div>
   );
 }
 
 export default function UnifiedSidebar({ role = "user" }: { role?: Role }) {
+  const isMenuOpen = useSelector((state: RootState) => state.menu.isOpen);
   const dispatch = useDispatch();
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

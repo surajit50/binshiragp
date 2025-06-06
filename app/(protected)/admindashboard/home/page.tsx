@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { formatDate } from "@/utils/utils";
 import { ShowWarishDetails } from "@/components/ShowWarishDetails";
-
+import SummaryCard from "@/components/SummaryCard";
 async function getLatestWarishApplications() {
   try {
     const applications = await db.warishApplication.findMany({
@@ -77,4 +77,4 @@ export default async function AdminDashboard() {
       </div>
     </div>
   );
-}
+} 

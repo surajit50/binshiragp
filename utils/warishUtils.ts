@@ -1,51 +1,41 @@
-import { FamilyRelationship } from "@prisma/client";
-import type { WarishDetailType } from "@/types/warish";
+import { WarishApplicationProps, WarishDetailProps } from "@/types";
 
-// Create a map of warish details with id as key
 export function createWarishDetailsMap(
-  warishDetails: WarishDetailType[]
-): Map<string, WarishDetailType> {
-  const warishDetailsMap = new Map<string, WarishDetailType>();
+  warishDetails: WarishDetailProps[]
+): Map<string, WarishDetailProps> {
+  const warishDetailsMap = new Map<string, WarishDetailProps>();
 
-  for (const detail of warishDetails) {
-    warishDetailsMap.set(detail.id, detail);
-  }
+  warishDetails.forEach((detail) => {
+    warishDetailsMap.set(detail.id, { ...detail, children: [] });
+  });
 
   return warishDetailsMap;
 }
 
-// Organize warish details into a hierarchy
 export function organizeWarishDetailsHierarchy(
-  warishDetailsMap: Map<string, WarishDetailType>
-): WarishDetailType[] {
-  const rootWarishDetails: WarishDetailType[] = [];
+  warishDetailsMap: Map<string, WarishDetailProps>
+): WarishDetailProps[] {
+  const rootWarishDetails: WarishDetailProps[] = [];
 
-  // First pass: identify root nodes (those without parents or with non-existent parents)
   warishDetailsMap.forEach((detail) => {
-    if (!detail.parentId || !warishDetailsMap.has(detail.parentId)) {
-      rootWarishDetails.push(detail);
-    }
-  });
-
-  // Second pass: build the hierarchy
-  warishDetailsMap.forEach((detail) => {
-    if (detail.parentId && warishDetailsMap.has(detail.parentId)) {
+    if (detail.parentId) {
       const parent = warishDetailsMap.get(detail.parentId);
       if (parent) {
+        parent.children = parent.children || [];
         parent.children.push(detail);
       }
+    } else {
+      rootWarishDetails.push(detail);
     }
   });
 
   return rootWarishDetails;
 }
 
-// Validate family relationship
-export function validateRelation(relation: string): FamilyRelationship {
-  if (
-    !Object.values(FamilyRelationship).includes(relation as FamilyRelationship)
-  ) {
-    throw new Error(`Invalid family relationship: ${relation}`);
-  }
-  return relation as FamilyRelationship;
+// Helper function to use both functions together
+export function processWarishDetails(
+  application: WarishApplicationProps
+): WarishDetailProps[] {
+  const warishDetailsMap = createWarishDetailsMap(application.warishDetails);
+  return organizeWarishDetailsHierarchy(warishDetailsMap);
 }

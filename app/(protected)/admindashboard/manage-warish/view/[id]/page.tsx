@@ -1,6 +1,8 @@
+import React from "react";
 import { db } from "@/lib/db";
-
+import { WarishApplicationProps, WarishDetailProps } from "@/types";
 import {
+  processWarishDetails,
   createWarishDetailsMap,
   organizeWarishDetailsHierarchy,
 } from "@/utils/warishUtils";
@@ -8,6 +10,7 @@ import WarishEditFormComponent from "@/components/form/WarishForm/warish-edit-fo
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -21,18 +24,13 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { PlusCircle, AlertCircle } from "lucide-react";
+import { PlusCircle, AlertCircle, ChevronRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
-import type {
-  Gender,
-  LivingStatus,
-  MaritialStatus,
-  FamilyRelationship,
-} from "@prisma/client";
-
-import type { WarishDetailType } from "@/types/warish";
-
+import { revalidatePath } from "next/cache";
+import { WarishDetailType } from "@/types/warish";
+import { FamilyRelationship } from "@prisma/client";
+import { updateWarishDetail, deleteWarishDetail } from "./actions";
 import { WarishDetailRow } from "./warish-detail-row";
 
 type Props = {
@@ -75,67 +73,20 @@ async function getWarishDetails(id: string): Promise<WarishDetailType[]> {
     console.log("Found all warish details:", warishDetails.length);
     console.log("Warish details:", JSON.stringify(warishDetails, null, 2));
 
-    // Define interfaces that match the actual Prisma query result
-    interface WarishDetailChild {
-      id: string;
-      name: string;
-      gender: Gender;
-      relation: FamilyRelationship;
-      livingStatus: LivingStatus;
-      maritialStatus: MaritialStatus;
-      hasbandName: string | null;
-      parentId: string | null;
-      warishApplicationId: string;
-      createdAt: Date;
-      updatedAt: Date;
-    }
-
-    interface WarishDetailFromDB {
-      id: string;
-      name: string;
-      gender: Gender;
-      relation: FamilyRelationship;
-      livingStatus: LivingStatus;
-      maritialStatus: MaritialStatus;
-      hasbandName: string | null;
-      parentId: string | null;
-      warishApplicationId: string;
-      createdAt: Date;
-      updatedAt: Date;
-      children: WarishDetailChild[];
-    }
-
-    // Transformation function with proper typing
-    const transformWarishDetail = (
-      detail: WarishDetailFromDB
-    ): WarishDetailType => ({
+    // Transform the data to match WarishDetailType
+    const transformWarishDetail = (detail: any): WarishDetailProps => ({
       id: detail.id,
-      name: detail.name || "",
+      name: detail.name,
       gender: detail.gender,
       relation: detail.relation,
       livingStatus: detail.livingStatus,
       maritialStatus: detail.maritialStatus,
-      hasbandName: detail.hasbandName || null,
-      parentId: detail.parentId || null,
+      hasbandName: detail.hasbandName,
+      parentId: detail.parentId,
       warishApplicationId: detail.warishApplicationId,
-      createdAt: detail.createdAt || new Date(),
-      updatedAt: detail.updatedAt || new Date(),
-      children: detail.children.map(
-        (child): WarishDetailType => ({
-          id: child.id,
-          name: child.name || "",
-          gender: child.gender,
-          relation: child.relation,
-          livingStatus: child.livingStatus,
-          maritialStatus: child.maritialStatus,
-          hasbandName: child.hasbandName || null,
-          parentId: child.parentId || null,
-          warishApplicationId: child.warishApplicationId,
-          createdAt: child.createdAt || new Date(),
-          updatedAt: child.updatedAt || new Date(),
-          children: [], // Children of children are not loaded in this query
-        })
-      ),
+      createdAt: detail.createdAt,
+      updatedAt: detail.updatedAt,
+      children: (detail.children || []).map(transformWarishDetail),
     });
 
     const transformedDetails = warishDetails.map(transformWarishDetail);

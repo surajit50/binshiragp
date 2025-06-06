@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import WarishApplicationDetails from "@/components/WarishApplicationDetails";
-import { WarishApplicationProps } from "@/types";
+import { WarishDetailProps, WarishApplicationProps } from "@/types";
 import {
   createWarishDetailsMap,
   organizeWarishDetailsHierarchy,
@@ -36,6 +36,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         rootWarishDetails={rootWarishDetails}
       />
       <Separator className="my-4" />
+     
     </div>
   );
 }

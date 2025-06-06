@@ -2,7 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-
+import CardWrapper from "./card-wrapper";
+import ErrorForm from "../ErrorForm";
+import SuccessForm from "../SuccessForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -24,7 +26,8 @@ import { toast } from "sonner";
 
 const RegisterForm = () => {
   const router = useRouter();
-
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [passwordValue, setPasswordValue] = useState("");
@@ -43,10 +46,15 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
+    setError("");
+    setSuccess("");
     setIsRedirecting(false);
 
     startTransition(() => {
       register(values).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
+
         if (data.success) {
           toast.success("Registration successful! Redirecting to login...");
           form.reset();
@@ -208,8 +216,8 @@ const RegisterForm = () => {
                               getPasswordStrength().label === "Weak"
                                 ? 33
                                 : getPasswordStrength().label === "Medium"
-                                  ? 66
-                                  : 100
+                                ? 66
+                                : 100
                             }%`,
                           }}
                         />
@@ -331,6 +339,10 @@ const RegisterForm = () => {
                 </FormItem>
               )}
             />
+
+            {/* Error and Success Messages */}
+            <ErrorForm message={error} />
+            <SuccessForm message={success} />
 
             {/* Submit Button */}
             <Button

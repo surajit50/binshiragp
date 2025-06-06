@@ -14,7 +14,7 @@ import { getUserEmail } from "@/data/user"; // Ensure this fetches the user with
 import { generateTwoFactorToken, generateVerificationToken } from "@/lib/token";
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
 import { getTwoFactorTokenEmail } from "@/data/two-factor-token";
-
+import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { db } from "@/lib/db";
 import { compare } from "bcryptjs"; // For manual password check
 
@@ -45,13 +45,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
   // Step 2: Handle Email Verification
   if (!existingUser.emailVerified) {
-    const verificationToken = await generateVerificationToken(
-      existingUser.email
-    );
-    await sendVerificationEmail(
-      verificationToken.email,
-      verificationToken.token
-    );
+    const verificationToken = await generateVerificationToken(existingUser.email);
+    await sendVerificationEmail(verificationToken.email, verificationToken.token);
     return { success: "Confirmation email sent!" };
   }
 
@@ -69,9 +64,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       // Delete token and existing confirmation
       await db.$transaction([
         db.twoFactorToken.delete({ where: { id: twoFactorToken.id } }),
-        db.twoFactorConfirmation.deleteMany({
-          where: { userId: existingUser.id },
-        }),
+        db.twoFactorConfirmation.deleteMany({ where: { userId: existingUser.id } }),
       ]);
 
       await db.twoFactorConfirmation.create({

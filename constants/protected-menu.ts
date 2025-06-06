@@ -986,14 +986,14 @@ export const adminMenuItems: MenuItemProps[] = [
       },
       {
         menuItemText: "Tanker Maintenance",
-        menuItemLink: `${BASE_URLS.admin}/water-tanker/availability`,
-        Icon: FaChevronCircleRight,
+        menuItemLink: `${BASE_URLS.admin}/water-tanker/availability`,  
+        Icon: FaChevronCircleRight, 
         color: COLORS.purple,
-        submenu: false,
+        submenu: false, 
         subMenuItems: [],
-      },
+      }
     ],
-  },
+  }
 ];
 
 // Employee Menu
@@ -1190,6 +1190,7 @@ export const employeeMenuItems: MenuItemProps[] = [
     submenu: true,
 
     subMenuItems: [
+      
       {
         menuItemText: "Booking Requests",
         menuItemLink: `${BASE_URLS.employee}/water-tanker/booking`,
@@ -1207,7 +1208,7 @@ export const employeeMenuItems: MenuItemProps[] = [
         subMenuItems: [],
       },
     ],
-  },
+  } 
 ];
 
 // Super Admin Menu
@@ -1300,4 +1301,6 @@ export const superAdminMenuItems: MenuItemProps[] = [
       },
     ],
   },
+
+  
 ];

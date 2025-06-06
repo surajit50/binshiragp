@@ -1,9 +1,11 @@
 import React from "react";
-import { Search } from "lucide-react";
-
+import { Bell, Search, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UserButtonProfile from "../auth/userButton";
-
+import NotificationBell from "../NotificationBell";
+import NotificationMessage from "../NotificationMessage";
+import Humbargarmenu from "./Humbargarmenu";
 import { currentUser } from "@/lib/auth";
 import { User } from "@prisma/client";
 import { db } from "@/lib/db";
@@ -33,7 +35,13 @@ export default async function Header() {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            {userInfo?.role === "admin" && <></>}
+            {userInfo?.role === "admin" && (
+              <>
+                <NotificationBell />
+
+                <NotificationMessage />
+              </>
+            )}
 
             <UserButtonProfile user={userInfo} />
           </div>

@@ -1,6 +1,8 @@
 "use server";
 
 import { getUserEmail } from "@/data/user";
+import { db } from "@/lib/db";
+import { emailServiceStatus } from "@/lib/emailservide";
 import { sendResetPasswordEmail } from "@/lib/mail";
 import { generatePasswordToken } from "@/lib/token";
 import { ResetSchema } from "@/schema";
@@ -22,6 +24,15 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
   }
 
   const passwordResetToken = await generatePasswordToken(email);
+
+  const status = await emailServiceStatus();
+
+  if (!status) {
+    return {
+      error:
+        "Email service is currently disabled. Please try again later or contact support.",
+    };
+  }
 
   try {
     await sendResetPasswordEmail(

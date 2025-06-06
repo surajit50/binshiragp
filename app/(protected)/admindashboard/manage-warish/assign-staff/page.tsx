@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-
+import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -11,7 +11,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import StaffAssignmentForm from "@/components/staff-assignment-form";
-import { formatDate, formatDateTime } from "@/utils/utils";
 
 const statusVariant: Record<string, string> = {
   submitted: "bg-yellow-100 text-yellow-800",
@@ -43,13 +42,14 @@ export default async function WarishManagement() {
   const staffMembers = await db.user.findMany({
     where: {
       role: "staff",
-      userStatus: "active",
+      userStatus: "active"
     },
     select: {
       id: true,
-      name: true,
+      name: true
     },
   });
+  
 
   // Filter out staff members with null names
   const validStaffMembers = staffMembers.filter(
@@ -95,7 +95,9 @@ export default async function WarishManagement() {
                       </div>
                     </TableCell>
                     <TableCell>{app.nameOfDeceased}</TableCell>
-                    <TableCell>{formatDate(app.dateOfDeath)}</TableCell>
+                    <TableCell>
+                      {format(app.dateOfDeath, "dd/MM/yyyy")}
+                    </TableCell>
                     <TableCell>
                       <StaffAssignmentForm
                         applicationId={app.id}
@@ -141,10 +143,10 @@ export default async function WarishManagement() {
                       </TableCell>
                       <TableCell>{staff ? staff.name : "Unassigned"}</TableCell>
                       <TableCell>
-                        {formatDateTime(app.updatedAt).dateTime}
+                        {format(app.updatedAt, "dd/MM/yyyy HH:mm")}
                       </TableCell>
                       <TableCell>
-                        {formatDateTime(app.updatedAt).dateTime}
+                        {format(app.updatedAt, "dd/MM/yyyy HH:mm")}
                       </TableCell>
                       <TableCell>
                         <Badge

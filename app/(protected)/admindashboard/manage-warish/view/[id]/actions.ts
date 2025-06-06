@@ -7,21 +7,20 @@ import {
   Gender,
   LivingStatus,
   MaritialStatus,
-  WarishDetail,
 } from "@prisma/client";
 
 // Shared response type
 export type WarishDetailResponse = {
   success: boolean;
   message: string;
-  data: WarishDetail | null;
+  data: any | null;
 };
 
 // Helper function for common response formatting
 const createResponse = (
   success: boolean,
   message: string,
-  data: WarishDetail | null = null
+  data: any = null
 ): WarishDetailResponse => ({
   success,
   message,
@@ -71,11 +70,11 @@ export async function createWarishDetail(
       "Successfully created warish detail",
       newDetail
     );
-  } catch (error: Error | unknown) {
+  } catch (error: any) {
     console.error("Creation error:", error);
     return createResponse(
       false,
-      error instanceof Error ? error.message : "Failed to create warish detail"
+      error.message || "Failed to create warish detail"
     );
   }
 }
@@ -140,14 +139,14 @@ export async function updateWarishDetail(
       "Successfully updated warish detail",
       updatedDetail
     );
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error("Update error:", error);
 
     // Handle specific Prisma errors
     const errorMessage =
-      error && typeof error === 'object' && 'code' in error && error.code === "P2025"
+      error.code === "P2025"
         ? "Record not found"
-        : error instanceof Error ? error.message : "Failed to update warish detail";
+        : error.message || "Failed to update warish detail";
 
     return createResponse(false, errorMessage);
   }
@@ -191,12 +190,12 @@ export async function deleteWarishDetail(
       "Successfully deleted warish detail",
       deletedDetail
     );
-  } catch (error: Error | { code: string; message: string } | unknown) {
+  } catch (error: any) {
     console.error("Deletion error:", error);
     const errorMessage =
-      error && typeof error === 'object' && 'code' in error && error.code === "P2025"
+      error.code === "P2025"
         ? "Record not found"
-        : error instanceof Error ? error.message : "Database operation failed";
+        : error.message || "Database operation failed";
 
     return createResponse(false, `Deletion failed: ${errorMessage}`);
   }
