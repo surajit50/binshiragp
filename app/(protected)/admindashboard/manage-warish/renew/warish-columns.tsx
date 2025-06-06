@@ -2,11 +2,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+
 import { Button } from "@/components/ui/button";
 import { renewWarishApplication } from "@/action/renew-warish-application";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
+import { formatDate } from "@/utils/utils";
 
 export type WarishApplication = {
   id: string;
@@ -34,10 +35,10 @@ const RenewButton = ({ id }: { id: string }) => {
       } else {
         throw new Error(result.message);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
-        description: "Failed to renew application. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to renew application. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -102,7 +103,7 @@ export const columns: ColumnDef<WarishApplication>[] = [
     header: "Warish Ref Date",
     cell: ({ row }) =>
       row.original.warishRefDate
-        ? format(row.original.warishRefDate, "dd/MM/yyyy")
+        ? formatDate(row.original.warishRefDate)
         : "N/A",
   },
   {
@@ -110,7 +111,7 @@ export const columns: ColumnDef<WarishApplication>[] = [
     header: "Renewal Date",
     cell: ({ row }) =>
       row.original.renewdate
-        ? format(row.original.renewdate, "dd/MM/yyyy")
+        ? formatDate(row.original.renewdate)
         : "N/A",
   },
   {

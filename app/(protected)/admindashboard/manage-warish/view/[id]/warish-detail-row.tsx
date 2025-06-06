@@ -148,12 +148,12 @@ function WarishDetailRow({
         title: "Success",
         description: "Changes saved successfully",
       });
-    } catch (error: any) {
-      setSaveState({ loading: false, error: error.message });
+    } catch (error: unknown) {
+      setSaveState({ loading: false, error: error instanceof Error ? error.message : 'An unknown error occurred' });
 
       toast({
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : 'An unknown error occurred',
         variant: "destructive",
       });
     }
@@ -202,14 +202,14 @@ function WarishDetailRow({
 
       // Refresh data without full page reload
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
       setDeleteState({
         loading: false,
-        error: error.message || "An error occurred during deletion",
+        error: error instanceof Error ? error.message : "An error occurred during deletion",
       });
       toast({
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : "An unknown error occurred",
         variant: "destructive",
       });
     }
@@ -241,8 +241,8 @@ function WarishDetailRow({
         hasbandName: "",
       });
       window.location.reload();
-    } catch (error: any) {
-      console.error("Failed to add child:", error);
+    } catch (error: unknown) {
+      console.error("Failed to add child:", error instanceof Error ? error.message : "An unknown error occurred");
     }
   };
 

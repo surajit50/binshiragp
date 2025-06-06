@@ -71,7 +71,7 @@ export default function WarishDocumentUpload({ params }: { params: { id: string 
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to load documents",
+        description: `Failed to load documents: ${error instanceof Error ? error.message : 'Unknown error'}`,
       })
     } finally {
       setLoading(false)

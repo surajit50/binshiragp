@@ -1,12 +1,7 @@
 import LegalHeirCertificateForm from '@/components/LegalHeirCertificateForm'
 import { notFound } from 'next/navigation'
 import { db } from '@/lib/db'
-import {
-  Gender,
-  MaritialStatus,
-  LivingStatus,
-  WarishApplicationStatus,
-} from "@prisma/client";
+
 
 import { WarishApplicationProps, WarishDetailProps } from '@/types'
 

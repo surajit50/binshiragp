@@ -12,7 +12,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Download,
-  Edit,
+ 
   Eye,
   Upload,
 } from "lucide-react";
@@ -92,10 +92,10 @@ export default function WarishApplicationSearch() {
       // If your API returns a single application, you can wrap it in an array: [result]
       const result = await response.json();
       setApplications(Array.isArray(result) ? result : [result]);
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error("Fetch Error:", error);
       setError(
-        error.message || "An error occurred while fetching applications"
+        error instanceof Error ? error.message : "An error occurred while fetching applications"
       );
     } finally {
       setLoading(false);

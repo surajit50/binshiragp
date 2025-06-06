@@ -1,6 +1,6 @@
 "use client";
 import { ShowWarishDetails } from "@/components/ShowWarishDetails";
-import { Warishdocument } from "@/components/warish-document";
+
 import { WarishApplication, WarishApplicationStatus } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
