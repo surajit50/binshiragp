@@ -301,7 +301,7 @@ export default function WarishApplicationSearch() {
                               className="h-8 px-3 text-blue-600 border-blue-200 hover:bg-blue-50"
                             >
                               <Eye className="h-3.5 w-3.5 mr-1" />
-                              View
+                              Modify
                             </Button>
                             <Button
                               variant="outline"

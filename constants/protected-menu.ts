@@ -385,7 +385,7 @@ export const adminMenuItems: MenuItemProps[] = [
     submenu: true,
     subMenuItems: [
       {
-        menuItemText: "Certificate Applications",
+        menuItemText: "Modify Applications",
         menuItemLink: `${BASE_URLS.admin}/manage-warish/view`,
         Icon: FaChevronCircleRight,
         color: COLORS.yellow,
