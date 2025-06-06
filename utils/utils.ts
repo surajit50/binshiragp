@@ -68,10 +68,10 @@ export async function downloadUrl(
 export const calculateSecurityDeposit = (
   grossBillAmount: number | string
 ): number => {
-  const amount = Number(grossBillAmount) || 0
-  const deposit = amount * 0.1
-  return Math.max(Number(deposit.toFixed(2)), 0)
-}
+  const amount = Number(grossBillAmount) || 0;
+  const deposit = amount * 0.1;
+  return Math.max(Number(deposit.toFixed(2)), 0);
+};
 
 /**
  * Calculates net amount with:
@@ -87,18 +87,18 @@ export const calculateNetAmount = (
   lessTdsSgst: number | string,
   securityDeposit: number | string
 ): number => {
-  const gross = Number(grossBillAmount) || 0
+  const gross = Number(grossBillAmount) || 0;
   const deductions = [
     Number(lessIncomeTax) || 0,
     Number(lessLabourWelfareCess) || 0,
     Number(lessTdsCgst) || 0,
     Number(lessTdsSgst) || 0,
     Number(securityDeposit) || 0,
-  ].reduce((sum, deduction) => sum + Math.max(deduction, 0), 0)
+  ].reduce((sum, deduction) => sum + Math.max(deduction, 0), 0);
 
-  const net = gross - deductions
-  return Math.max(Number(net.toFixed(2)), 0)
-}
+  const net = gross - deductions;
+  return Math.max(Number(net.toFixed(2)), 0);
+};
 
 export const parseDateString = (dateString: string): Date | null => {
   const [day, month, year] = dateString.split("-").map(Number);
@@ -187,7 +187,7 @@ export function generateMemoNumber(latestNumber: number, year: number): string {
   const paddedNumber = newNumber.toString().padStart(3, "0");
 
   // Return the formatted memo number
-  return `${paddedNumber}/DGP/(LH)/${year}`;
+  return `${paddedNumber}/BGP/(LH)/${year}`;
 }
 
 export const formatDate = (date: Date): string => {
